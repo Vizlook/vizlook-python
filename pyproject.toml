@@ -1,0 +1,20 @@
+[project]
+name = "vizlook"
+version = "0.1.0"
+description = "The official Python library for the Vizlook API"
+authors = [{ name = "Vizlook", email = "support@vizlook.com" }]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+dependencies = [
+    "httpx (>=0.28.1,<0.29.0)", 
+    "pydantic (>=2.11.7,<3.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.1.1"
+
