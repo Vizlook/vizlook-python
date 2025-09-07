@@ -8,7 +8,9 @@ mkdir -p "$(dirname "$VERSION_FILE")"
 
 echo "Starting Python package release process (Poetry)..."
 
-# Handle command-line arguments to determine version update type or specific version number
+# --- Handle Command-Line Arguments ---
+
+# First argument: Version update type or specific version number
 # Default version increment type is 'patch'
 VERSION_INPUT_TYPE="patch" 
 
@@ -29,6 +31,16 @@ if [ -n "$1" ]; then # Check if an argument is provided
     fi
 else
     echo "No version type specified, defaulting to 'patch' version update."
+fi
+
+# Second argument: Poetry repository name for publishing
+# Default repository is 'pypi'
+POETRY_REPOSITORY="pypi"
+if [ -n "$2" ]; then # Check if a second argument is provided
+    POETRY_REPOSITORY="$2"
+    echo "Using custom Poetry repository: '$POETRY_REPOSITORY'."
+else
+    echo "No custom repository specified, defaulting to 'pypi'."
 fi
 
 # 1. Automatically update version number in pyproject.toml
@@ -82,9 +94,9 @@ git add "$VERSION_FILE" # Add the updated _version.py file
 git commit -m "Release v$PACKAGE_VERSION"
 
 # 4. Automatically publish to PyPI
-echo "4. Publishing package to PyPI..."
-# Ensure you are authenticated with PyPI (e.g., via 'poetry config pypi-token.pypi <your_token>').
-poetry publish
+echo "4. Publishing package to '$POETRY_REPOSITORY' repository..."
+# Ensure you are authenticated with PyPI or your custom repository.
+poetry publish --repository "$POETRY_REPOSITORY"
 
 # 5. Automatically push a Git tag to the repository
 echo "5. Creating and pushing Git Tag..."
@@ -92,4 +104,4 @@ git tag "v$PACKAGE_VERSION"
 git push # Push the new commit to the remote repository
 git push --tags # Push the new tag to the remote repository
 
-echo "Python package release process completed! Version v$PACKAGE_VERSION has been published to PyPI."
+echo "Python package release process completed! Version v$PACKAGE_VERSION has been published to '$POETRY_REPOSITORY'."
