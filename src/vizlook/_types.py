@@ -1,7 +1,17 @@
 import os
 import json
 import httpx
-from typing import List, Optional, Union, Literal, Any, TypeVar, Dict, Iterator
+from typing import (
+    List,
+    Optional,
+    Union,
+    Literal,
+    Any,
+    TypeVar,
+    Dict,
+    Iterator,
+    AsyncIterator,
+)
 from pydantic import BaseModel as PydanticBaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 from ._exceptions import APIError, HttpStatusCode
@@ -528,14 +538,13 @@ class StreamAnswerResponse:
             if not line:
                 continue
 
-            decoded_line = line.removeprefix("data: ")
+            chunk_str = line.removeprefix("data: ")
 
-            if decoded_line.strip() == "[DONE]":
-                self.close()
-                break
+            if chunk_str.strip() == "[DONE]":
+                continue
 
             try:
-                chunk = json.loads(decoded_line)
+                chunk = json.loads(chunk_str)
             except json.JSONDecodeError:
                 continue
 
@@ -563,28 +572,69 @@ class StreamAnswerResponse:
                 yield stream_chunk
 
     def close(self) -> None:
-        """Close the underlying raw response to release the network socket."""
-        try:
-            self._http_response.close()
-        except:
-            pass
+        self._http_response.close()
 
 
-# TODO
 class AsyncStreamAnswerResponse:
-    """A class representing a streaming answer response."""
+    """A class representing a async streaming answer response."""
 
     _http_response: httpx.Response
 
     def __init__(self, *, http_response: httpx.Response):
         self._http_response = http_response
-        self._ensure_ok_status()
+        self._ensure_response_success()
 
-    def _ensure_ok_status(self):
-        if self._http_response.status_code != 200:
+    def _ensure_response_success(self):
+        if not self._http_response.is_success:
             raise APIError(
-                f"Request failed with status code {self._http_response.status_code}: {self._raw_response.text}"
+                "Answer request failed.",
+                self._http_response.status_code,
+                path="/answer",
             )
+
+    def __aiter__(self):
+        async def generator() -> AsyncIterator[AnswerStreamChunk]:
+            async for line in self._http_response.aiter_lines():
+                if not line:
+                    continue
+
+                chunk_str = line.removeprefix("data: ")
+
+                if chunk_str.strip() == "[DONE]":
+                    continue
+
+                try:
+                    chunk = json.loads(chunk_str)
+                except json.JSONDecodeError:
+                    continue
+
+                stream_chunk = None
+
+                try:
+                    chunk_type = chunk.get("type")
+
+                    if chunk_type == "answer-chunk":
+                        stream_chunk = AnswerStreamChunkAnswerData(**chunk)
+                    if chunk_type == "data-citations":
+                        stream_chunk = AnswerStreamChunkCitationsData(**chunk)
+                    if chunk_type == "data-cost":
+                        stream_chunk = AnswerStreamChunkCostData(**chunk)
+                    if chunk_type == "error":
+                        stream_chunk = AnswerStreamChunkErrorData(**chunk)
+                except Exception as err:
+                    raise APIError(
+                        str(err) or "Unknown error.",
+                        HttpStatusCode.InternalServerError,
+                        path="/answer",
+                    )
+
+                if stream_chunk:
+                    yield stream_chunk
+
+        return generator()
+
+    async def close(self) -> None:
+        await self._http_response.aclose()
 
 
 NonStreamResponseT = TypeVar(
@@ -594,9 +644,4 @@ NonStreamResponseT = TypeVar(
         httpx.Response,
         Dict[str, Any],
     ],
-)
-
-StreamResponseT = TypeVar(
-    "StreamResponseT",
-    bound=Union[StreamAnswerResponse, AsyncStreamAnswerResponse],
 )
