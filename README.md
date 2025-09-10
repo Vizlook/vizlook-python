@@ -23,18 +23,19 @@ response = vizlook.search(
     "how to be productive",
     max_results=5,
     start_published_date="2025-08-19T15:01:36.000Z",
-    need_transcription=True,
-    need_summary=True,
+    include_transcription=True,
+    include_summary=True,
 )
 
-print("response with original API key:", response.to_dict())
-print("response with snake case key:", response.to_dict(use_api_field_name=False))
+print("response with original API field name: ", response.to_dict())
+print("response with snake case field name: ", response.to_dict(use_api_field_name=False))
+print("get field value with snake case key from pydantic model: ", response.results)
 ```
 
 Generates an answer to a query.
 
 ```python
-response = vizlook.answer("how to be productive", need_transcription=True)
+response = vizlook.answer("how to be productive", include_transcription=True)
 ```
 
 Streams an answer to a query.
@@ -64,8 +65,10 @@ Retrieves contents of videos based on specified URLs.
 
 ```python
 response = vizlook.get_video_contents(
-  "https://www.youtube.com/watch?v=QdBokRd2ahw",
-  crawl_mode="Always",
+    "https://www.youtube.com/watch?v=QdBokRd2ahw",
+    crawl_mode="Always",
+    include_transcription=True,
+    include_summary=True,
 )
 ```
 

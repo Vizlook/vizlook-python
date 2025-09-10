@@ -14,8 +14,8 @@ def run_examples():
         max_results=5,
         start_published_date="2025-08-19T15:01:36.000Z",
         end_published_date=int(datetime.now().timestamp() * 1000),
-        need_transcription=True,
-        need_summary=True,
+        include_transcription=True,
+        include_summary=True,
     )
 
     print("response with original API field name: ")

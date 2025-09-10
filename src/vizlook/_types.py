@@ -96,9 +96,9 @@ class ContentOptions(BaseModel):
     """
 
     # Whether to include video transcription in the search results.
-    need_transcription: Optional[bool] = None
+    include_transcription: Optional[bool] = None
     # Whether to include video summary in the search results.
-    need_summary: Optional[bool] = None
+    include_summary: Optional[bool] = None
 
 
 Category = Literal["Healthcare", "Ecommerce", "Tech", "Finance", "Education"]
@@ -120,7 +120,7 @@ class SearchOptions(BaseModel):
     # The maximum number of search results to return. The default value is 10 and the maximum value is 20.
     max_results: Optional[int] = None
     # Configure what search results include.
-    config: Optional[ContentOptions] = None
+    content_options: Optional[ContentOptions] = None
 
 
 class VideoClip(BaseModel):
@@ -241,7 +241,7 @@ class SearchResultItem(BaseModel):
 
 class SearchDollarCostBreakdown(BaseModel):
     # Search dollar cost.
-    search: Optional[float] = None
+    search: float
     # Summary dollar cost.
     summary: Optional[float] = None
     # Transcription dollar cost.
@@ -276,7 +276,7 @@ class AnswerContentOptions(BaseModel):
     """
 
     # Whether to include video transcription in the answer citations.
-    need_transcription: Optional[bool] = None
+    include_transcription: Optional[bool] = None
 
 
 class AnswerOptions(BaseModel):
@@ -286,7 +286,7 @@ class AnswerOptions(BaseModel):
 
     query: str
     stream: Optional[bool] = None
-    config: Optional[AnswerContentOptions] = None
+    content_options: Optional[AnswerContentOptions] = None
 
 
 class AnswerCitationItem(BaseModel):
@@ -396,7 +396,7 @@ class VideoContentsOptions(BaseModel):
     # Crawl mode, default is 'Never'
     crawl_mode: Optional[Literal["Never", "Fallback", "Always"]] = "Never"
     # Configure what video results include.
-    config: Optional[ContentOptions] = None
+    content_options: Optional[ContentOptions] = None
 
 
 VideoContentErrorType = Literal[

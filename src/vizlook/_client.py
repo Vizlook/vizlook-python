@@ -142,8 +142,8 @@ class Vizlook:
         category: Optional[Category] = None,
         start_published_date: Optional[Union[str, int]] = None,
         end_published_date: Optional[Union[str, int]] = None,
-        need_transcription: Optional[bool] = None,
-        need_summary: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
+        include_summary: Optional[bool] = None,
     ) -> SearchResponse:
         """
         Args:
@@ -152,8 +152,8 @@ class Vizlook:
             category: Video category.
             start_published_date: Start date for results based on video published date in millisecond or ISO timestamp string.
             end_published_date: End date for results based on video published date in millisecond or ISO timestamp string.
-            need_transcription: Whether to include video transcription in the search results.
-            need_summary: Whether to include video summary in the search results.
+            include_transcription: Whether to include video transcription in the search results.
+            include_summary: Whether to include video summary in the search results.
         """
         try:
             search_options = SearchOptions(
@@ -162,9 +162,9 @@ class Vizlook:
                 category=category,
                 start_published_date=start_published_date,
                 end_published_date=end_published_date,
-                config={
-                    "need_transcription": need_transcription,
-                    "need_summary": need_summary,
+                content_options={
+                    "include_transcription": include_transcription,
+                    "include_summary": include_summary,
                 },
             )
             request_body = search_options.to_dict(exclude_none=True)
@@ -197,8 +197,8 @@ class Vizlook:
         urls: Union[str, List[str]],
         *,
         crawl_mode: Optional[Literal["Never", "Fallback", "Always"]] = "Never",
-        need_transcription: Optional[bool] = None,
-        need_summary: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
+        include_summary: Optional[bool] = None,
     ) -> VideoContentsResponse:
         """
         Args:
@@ -207,16 +207,16 @@ class Vizlook:
                 - Never: never crawl from source
                 - Fallback: crawl from source when there is no existing data
                 - Always: always real-time crawl from source
-            need_transcription: Whether to include video transcription in the search results.
-            need_summary: Whether to include video summary in the search results.
+            include_transcription: Whether to include video transcription in the search results.
+            include_summary: Whether to include video summary in the search results.
         """
         try:
             contents_options = VideoContentsOptions(
                 urls=urls if type(urls) is list else [urls],
                 crawl_mode=crawl_mode,
-                config={
-                    "need_transcription": need_transcription,
-                    "need_summary": need_summary,
+                content_options={
+                    "include_transcription": include_transcription,
+                    "include_summary": include_summary,
                 },
             )
             request_body = contents_options.to_dict(exclude_none=True)
@@ -248,19 +248,19 @@ class Vizlook:
         self,
         query: str,
         *,
-        need_transcription: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
     ) -> AnswerResponse:
         """
         Args:
             query: The query to answer.
-            need_transcription: Whether to include video transcription in the answer citations.
+            include_transcription: Whether to include video transcription in the answer citations.
         """
         try:
             answer_options = AnswerOptions(
                 query=query,
                 stream=False,
-                config={
-                    "need_transcription": need_transcription,
+                content_options={
+                    "include_transcription": include_transcription,
                 },
             )
             request_body = answer_options.to_dict(exclude_none=True)
@@ -292,19 +292,19 @@ class Vizlook:
         self,
         query: str,
         *,
-        need_transcription: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
     ) -> StreamAnswerResponse:
         """
         Args:
             query: The query to answer.
-            need_transcription: Whether to include video transcription in the answer citations.
+            include_transcription: Whether to include video transcription in the answer citations.
         """
         try:
             answer_options = AnswerOptions(
                 query=query,
                 stream=True,
-                config={
-                    "need_transcription": need_transcription,
+                content_options={
+                    "include_transcription": include_transcription,
                 },
             )
             request_body = answer_options.to_dict(exclude_none=True)
@@ -456,8 +456,8 @@ class AsyncVizlook:
         category: Optional[Category] = None,
         start_published_date: Optional[Union[str, int]] = None,
         end_published_date: Optional[Union[str, int]] = None,
-        need_transcription: Optional[bool] = None,
-        need_summary: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
+        include_summary: Optional[bool] = None,
     ) -> SearchResponse:
         """
         Args:
@@ -466,8 +466,8 @@ class AsyncVizlook:
             category: Video category.
             start_published_date: Start date for results based on video published date in millisecond or ISO timestamp string.
             end_published_date: End date for results based on video published date in millisecond or ISO timestamp string.
-            need_transcription: Whether to include video transcription in the search results.
-            need_summary: Whether to include video summary in the search results.
+            include_transcription: Whether to include video transcription in the search results.
+            include_summary: Whether to include video summary in the search results.
         """
         try:
             search_options = SearchOptions(
@@ -476,9 +476,9 @@ class AsyncVizlook:
                 category=category,
                 start_published_date=start_published_date,
                 end_published_date=end_published_date,
-                config={
-                    "need_transcription": need_transcription,
-                    "need_summary": need_summary,
+                content_options={
+                    "include_transcription": include_transcription,
+                    "include_summary": include_summary,
                 },
             )
             request_body = search_options.to_dict(exclude_none=True)
@@ -511,8 +511,8 @@ class AsyncVizlook:
         urls: Union[str, List[str]],
         *,
         crawl_mode: Optional[Literal["Never", "Fallback", "Always"]] = "Never",
-        need_transcription: Optional[bool] = None,
-        need_summary: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
+        include_summary: Optional[bool] = None,
     ) -> VideoContentsResponse:
         """
         Args:
@@ -521,16 +521,16 @@ class AsyncVizlook:
                 - Never: never crawl from source
                 - Fallback: crawl from source when there is no existing data
                 - Always: always real-time crawl from source
-            need_transcription: Whether to include video transcription in the search results.
-            need_summary: Whether to include video summary in the search results.
+            include_transcription: Whether to include video transcription in the search results.
+            include_summary: Whether to include video summary in the search results.
         """
         try:
             contents_options = VideoContentsOptions(
                 urls=urls if type(urls) is list else [urls],
                 crawl_mode=crawl_mode,
-                config={
-                    "need_transcription": need_transcription,
-                    "need_summary": need_summary,
+                content_options={
+                    "include_transcription": include_transcription,
+                    "include_summary": include_summary,
                 },
             )
             request_body = contents_options.to_dict(exclude_none=True)
@@ -562,19 +562,19 @@ class AsyncVizlook:
         self,
         query: str,
         *,
-        need_transcription: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
     ) -> AnswerResponse:
         """
         Args:
             query: The query to answer.
-            need_transcription: Whether to include video transcription in the answer citations.
+            include_transcription: Whether to include video transcription in the answer citations.
         """
         try:
             answer_options = AnswerOptions(
                 query=query,
                 stream=False,
-                config={
-                    "need_transcription": need_transcription,
+                content_options={
+                    "include_transcription": include_transcription,
                 },
             )
             request_body = answer_options.to_dict(exclude_none=True)
@@ -606,19 +606,19 @@ class AsyncVizlook:
         self,
         query: str,
         *,
-        need_transcription: Optional[bool] = None,
+        include_transcription: Optional[bool] = None,
     ) -> AsyncStreamAnswerResponse:
         """
         Args:
             query: The query to answer.
-            need_transcription: Whether to include video transcription in the answer citations.
+            include_transcription: Whether to include video transcription in the answer citations.
         """
         try:
             answer_options = AnswerOptions(
                 query=query,
                 stream=True,
-                config={
-                    "need_transcription": need_transcription,
+                content_options={
+                    "include_transcription": include_transcription,
                 },
             )
             request_body = answer_options.to_dict(exclude_none=True)

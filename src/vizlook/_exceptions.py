@@ -6,8 +6,8 @@ from enum import IntEnum
 class HttpStatusCode(IntEnum):
     BadRequest = 400
     Unauthorized = 401
-    InsufficientBalance = 402
     TooManyRequests = 429
+    PayAsYouGoLimitExceeded = 432
     InternalServerError = 500
 
 

@@ -11,8 +11,8 @@ def run_examples():
     response = vizlook.get_video_contents(
         "https://www.youtube.com/watch?v=QdBokRd2ahw",
         crawl_mode="Fallback",
-        need_transcription=True,
-        need_summary=True,
+        include_transcription=True,
+        include_summary=True,
     )
 
     print("response with original API field name: ")

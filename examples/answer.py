@@ -11,7 +11,7 @@ def run_examples():
     print("============= non stream =============")
     response = vizlook.answer(
         "how to be productive",
-        need_transcription=True,
+        include_transcription=True,
     )
 
     print("response with original API field name: ")
@@ -26,7 +26,7 @@ def run_examples():
     print("============= stream =============")
     stream_response = vizlook.stream_answer(
         "how to be productive",
-        need_transcription=True,
+        include_transcription=True,
     )
     answer = ""
 
